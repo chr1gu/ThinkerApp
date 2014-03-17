@@ -9,8 +9,8 @@
 
 // Import the interfaces
 #import "IntroLayer.h"
-#import "HelloWorldLayer.h"
-
+#import "Interface.h"
+#import "CameraViewController.h"
 
 #pragma mark - IntroLayer
 
@@ -40,26 +40,18 @@
 
 	// ask director for the window size
 	CGSize size = [[CCDirector sharedDirector] winSize];
-
-	CCSprite *background;
-	
-	if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ) {
-		background = [CCSprite spriteWithFile:@"Default.png"];
-		background.rotation = 90;
-	} else {
-		background = [CCSprite spriteWithFile:@"Default-Landscape~ipad.png"];
-	}
-	background.position = ccp(size.width/2, size.height/2);
-
-	// add the label as a child to this Layer
-	[self addChild: background];
-	
-	// In one second transition to the new scene
-	[self scheduleOnce:@selector(makeTransition:) delay:1];
+    CameraViewController *cameraViewController = [[CameraViewController alloc] initWithSize:size];
+    
+    // add camera view
+    [[[[CCDirector sharedDirector] view] superview] insertSubview:[cameraViewController view] atIndex:0];
+    [CCDirector sharedDirector].view.backgroundColor = [UIColor clearColor];
+    [CCDirector sharedDirector].view.opaque = NO;
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); glClearColor(0.0, 0.0, 0.0, 0.0); glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    // add interface
+    Interface *interface = [Interface node];
+    [interface setCameraViewController:cameraViewController];
+    [self addChild:interface];
 }
 
--(void) makeTransition:(ccTime)dt
-{
-	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:[HelloWorldLayer scene] withColor:ccWHITE]];
-}
 @end

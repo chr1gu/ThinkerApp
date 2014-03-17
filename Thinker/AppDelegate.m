@@ -7,23 +7,38 @@
 //
 
 #import "cocos2d.h"
-
+#import "Flurry.h"
 #import "AppDelegate.h"
+#import "SocialManager.h"
 #import "IntroLayer.h"
 
 @implementation AppController
 
 @synthesize window=window_, navController=navController_, director=director_;
 
+// save session from facebook login
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    NSLog(@"session via facebook login");
+    [SocialManager handleOpenURL:url];
+    [SocialManager setFacebookMessage];
+    return YES;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // enable Flurry
+    [Flurry startSession:@"DBW6G72RJ4NXZ73Z8T4X"];
+    //[Flurry setDebugLogEnabled:YES];
+    
 	// Create the main window
 	window_ = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
 
 	// Create an CCGLView with a RGB565 color buffer, and a depth buffer of 0-bits
 	CCGLView *glView = [CCGLView viewWithFrame:[window_ bounds]
-								   pixelFormat:kEAGLColorFormatRGB565	//kEAGLColorFormatRGBA8
+								   //pixelFormat:kEAGLColorFormatRGB565	//kEAGLColorFormatRGBA8
+                                   pixelFormat:kEAGLColorFormatRGBA8
 								   depthFormat:0	//GL_DEPTH_COMPONENT24_OES
 							preserveBackbuffer:NO
 									sharegroup:nil
@@ -35,7 +50,8 @@
 	director_.wantsFullScreenLayout = YES;
 
 	// Display FSP and SPF
-	[director_ setDisplayStats:YES];
+	[director_ setDisplayStats:NO];
+    //[director_ setDisplayStats:YES];
 
 	// set FPS at 60
 	[director_ setAnimationInterval:1.0/60];

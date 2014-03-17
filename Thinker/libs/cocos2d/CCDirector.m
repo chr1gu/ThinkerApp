@@ -206,9 +206,14 @@ static CCDirector *_sharedDirector = nil;
 	[self setAlphaBlending: YES];
 	[self setDepthTest: view_.depthFormat];
 	[self setProjection: projection_];
+    
+    // ***** NEW CODE: make open gl view transparent
+    // http://www.cocos2d-iphone.org/forum/topic/9587
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	// ***** NEW CODE end
 
 	// set other opengl default values
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 //
